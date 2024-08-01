@@ -1,5 +1,11 @@
 const mongoose = require("mongoose");
 
+const PlayerSchema = new mongoose.Schema({
+  name: String,
+  color: String,
+  squares: [{ type: mongoose.Schema.Types.ObjectId, ref: "Square" }],
+});
+
 const SquareSchema = new mongoose.Schema({
   x: Number,
   y: Number,
@@ -12,7 +18,7 @@ const SquareSchema = new mongoose.Schema({
 
 const GameSchema = new mongoose.Schema({
   board: [SquareSchema],
-  players: [{ type: mongoose.Schema.Types.ObjectId, ref: "Player" }],
+  players: [PlayerSchema],
   currentPlayerIndex: { type: Number, default: 0 },
 });
 

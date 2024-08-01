@@ -4,10 +4,33 @@ exports.startGame = async (req, res) => {
   try {
     const game = new Game();
     game.board = createInitialBoard();
+
+    const player1 = game.players.create({
+      name: "Player 1",
+      color: "blue",
+      squares: [],
+    });
+    const player2 = game.players.create({
+      name: "Player 2",
+      color: "red",
+      squares: [],
+    });
+
+    game.players.push(player1, player2);
+
+    game.board[0].owner = player1._id;
+    game.board[19].owner = player2._id;
+
+    // Optionally, you can push the squares to player.squares array here if needed
+    player1.squares.push(game.board[0]._id);
+    player2.squares.push(game.board[19]._id);
+
     await game.save();
+
     res.json(game);
   } catch (err) {
-    res.status(500).send(err);
+    console.error("Error starting game:", err);
+    res.status(500).send(err.message);
   }
 };
 
@@ -28,3 +51,29 @@ function createInitialBoard() {
   }
   return board;
 }
+
+exports.initializeSocket = (io, socket, redisClient) => {
+  socket.on("joinGame", async (gameId) => {
+    try {
+      const game = await Game.findById(gameId).populate("players");
+      socket.join(gameId);
+      socket.emit("gameState", game);
+    } catch (err) {
+      console.error("Error joining game:", err);
+      socket.emit("error", err.message);
+    }
+  });
+
+  socket.on("makeMove", async (data) => {
+    const { gameId, move } = data;
+    try {
+      const game = await Game.findById(gameId);
+      game.applyMove(move);
+      await game.save();
+      io.in(gameId).emit("moveMade", move);
+    } catch (err) {
+      console.error("Error making move:", err);
+      socket.emit("error", err.message);
+    }
+  });
+};

@@ -2,6 +2,7 @@ import { Game } from "./game/game.js";
 
 document.addEventListener("DOMContentLoaded", () => {
   const socket = io();
+  let gameInstance; // Define gameInstance here
 
   socket.on("connect", () => {
     console.log("Connected to server");
@@ -9,7 +10,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
   socket.on("gameState", (game) => {
     console.log("Game state:", game);
-    const gameInstance = new Game(game);
+    gameInstance = new Game(game); // Initialize gameInstance here
     gameInstance.updateUI();
   });
 
@@ -28,7 +29,11 @@ document.addEventListener("DOMContentLoaded", () => {
       socket.emit("joinGame", gameId);
 
       document.getElementById("end-turn-btn").addEventListener("click", () => {
-        gameInstance.endTurn();
+        if (gameInstance) {
+          gameInstance.endTurn();
+        } else {
+          console.error("Game instance is not defined");
+        }
       });
     })
     .catch((error) => console.error("Error:", error));

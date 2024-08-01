@@ -37,6 +37,10 @@ app.get("/", (req, res) => {
   res.sendFile(path.join(__dirname, "../client/index.html"));
 });
 
+app.get("/game.html", (req, res) => {
+  res.sendFile(path.join(__dirname, "../client/game.html"));
+});
+
 io.on("connection", (socket) => {
   console.log("a user connected");
   gameController.initializeSocket(io, socket, redisClient);
