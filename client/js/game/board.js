@@ -1,9 +1,9 @@
 import { Square } from "../square.js";
 
 export function createBoard() {
-  let board = [];
-  for (let y = 0; y < 12; y++) {
-    for (let x = 0; x < 12; x++) {
+  const board = [];
+  for (let y = 0; y < 4; y++) {
+    for (let x = 0; x < 5; x++) {
       board.push(new Square(x, y));
     }
   }

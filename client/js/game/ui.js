@@ -1,5 +1,3 @@
-// js/game/ui.js
-
 import { getAdjacentSquares } from "./board.js";
 
 export function updateUI(game) {

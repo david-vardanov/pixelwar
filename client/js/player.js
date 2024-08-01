@@ -1,5 +1,3 @@
-// js/player.js
-
 import { getAdjacentSquares } from "./game/board.js";
 
 export class Player {

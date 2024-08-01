@@ -7,6 +7,7 @@ const SquareSchema = new mongoose.Schema({
   soldiers: { type: Number, default: 10 },
   movePoints: { type: Number, default: 0 },
   owner: { type: mongoose.Schema.Types.ObjectId, ref: "Player", default: null },
+  visible: { type: Boolean, default: false },
 });
 
 const GameSchema = new mongoose.Schema({

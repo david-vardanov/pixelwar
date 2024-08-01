@@ -1,5 +1,3 @@
-// js/square.js
-
 import { getRandomSoldierCount } from "./utils.js";
 
 export class Square {

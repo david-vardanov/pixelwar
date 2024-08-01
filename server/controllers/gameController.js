@@ -3,6 +3,7 @@ const Game = require("../models/gameModel");
 exports.startGame = async (req, res) => {
   try {
     const game = new Game();
+    game.board = createInitialBoard();
     await game.save();
     res.json(game);
   } catch (err) {
@@ -10,20 +11,20 @@ exports.startGame = async (req, res) => {
   }
 };
 
-exports.initializeSocket = (io, socket, redisClient) => {
-  socket.on("joinGame", async (gameId) => {
-    socket.join(gameId);
-    const game = await Game.findById(gameId);
-    socket.emit("gameState", game);
-  });
-
-  socket.on("makeMove", async (data) => {
-    const { gameId, move } = data;
-    // Process the move
-    const game = await Game.findById(gameId);
-    // Assuming you have a method to apply the move to the game
-    game.applyMove(move);
-    await game.save();
-    io.in(gameId).emit("moveMade", move);
-  });
-};
+function createInitialBoard() {
+  const board = [];
+  for (let y = 0; y < 4; y++) {
+    for (let x = 0; x < 5; x++) {
+      board.push({
+        x,
+        y,
+        type: "neutral",
+        soldiers: 10,
+        movePoints: 0,
+        owner: null,
+        visible: false,
+      });
+    }
+  }
+  return board;
+}

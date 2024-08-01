@@ -9,8 +9,6 @@ document.addEventListener("DOMContentLoaded", () => {
 
   socket.on("gameState", (game) => {
     console.log("Game state:", game);
-    // Update the UI based on the game state
-    // Assuming you have a method to initialize the game with server data
     const gameInstance = new Game(game);
     gameInstance.updateUI();
   });
@@ -20,13 +18,18 @@ document.addEventListener("DOMContentLoaded", () => {
     // Update the UI based on the move
   });
 
-  const game = new Game();
+  // Create a new game and get the game ID
+  fetch("/api/game/start", {
+    method: "POST",
+  })
+    .then((response) => response.json())
+    .then((game) => {
+      const gameId = game._id;
+      socket.emit("joinGame", gameId);
 
-  document.getElementById("end-turn-btn").addEventListener("click", () => {
-    game.endTurn();
-  });
-
-  // Assume gameId is available
-  const gameId = "some-game-id"; // This should be dynamically set
-  socket.emit("joinGame", gameId);
+      document.getElementById("end-turn-btn").addEventListener("click", () => {
+        gameInstance.endTurn();
+      });
+    })
+    .catch((error) => console.error("Error:", error));
 });

@@ -1,5 +1,3 @@
-// js/utils.js
-
 export function getRandomSoldierCount() {
   const weights = {
     5: 0.05, // 5% chance

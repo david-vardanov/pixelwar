@@ -1,5 +1,5 @@
 import { Player } from "../player.js";
-import { createBoard, getAdjacentSquares } from "./board.js";
+import { getAdjacentSquares } from "./board.js";
 import { Timer } from "./timer.js";
 import { updateUI } from "./ui.js";
 import {
@@ -10,32 +10,37 @@ import {
 } from "./mechanics.js";
 
 export class Game {
-  constructor() {
-    this.board = createBoard();
-    this.players = [
-      new Player("Player 1", "blue"),
-      new Player("Player 2", "red"),
-    ];
-    this.currentPlayerIndex = 0;
+  constructor(gameState) {
+    this.board = gameState
+      ? gameState.board.map((s) => new Square(s.x, s.y, s.type))
+      : createBoard();
+    this.players = gameState
+      ? gameState.players
+      : [new Player("Player 1", "blue"), new Player("Player 2", "red")];
+    this.currentPlayerIndex = gameState ? gameState.currentPlayerIndex : 0;
     this.selectedSquare = null;
     this.timer = new Timer(this.updateTimer.bind(this));
     this.initGame();
   }
 
   initGame() {
-    this.board[0].setOwner(this.players[0]);
-    this.board[143].setOwner(this.players[1]);
+    if (!this.gameState) {
+      this.board[0].setOwner(this.players[0]);
+      this.board[19].setOwner(this.players[1]); // Update to a valid index within the 4x5 grid
 
-    getAdjacentSquares(this.board, this.board[0]).forEach((adjacentSquare) => {
-      adjacentSquare.visible = true;
-    });
-    getAdjacentSquares(this.board, this.board[143]).forEach(
-      (adjacentSquare) => {
-        adjacentSquare.visible = true;
-      }
-    );
+      getAdjacentSquares(this.board, this.board[0]).forEach(
+        (adjacentSquare) => {
+          adjacentSquare.visible = true;
+        }
+      );
+      getAdjacentSquares(this.board, this.board[19]).forEach(
+        (adjacentSquare) => {
+          adjacentSquare.visible = true;
+        }
+      );
 
-    this.startTurn();
+      this.startTurn();
+    }
   }
 
   startTurn() {
