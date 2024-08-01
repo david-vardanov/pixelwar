@@ -10,6 +10,9 @@ document.addEventListener("DOMContentLoaded", () => {
   socket.on("gameState", (game) => {
     console.log("Game state:", game);
     // Update the UI based on the game state
+    // Assuming you have a method to initialize the game with server data
+    const gameInstance = new Game(game);
+    gameInstance.updateUI();
   });
 
   socket.on("moveMade", (move) => {

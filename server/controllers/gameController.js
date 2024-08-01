@@ -19,7 +19,11 @@ exports.initializeSocket = (io, socket, redisClient) => {
 
   socket.on("makeMove", async (data) => {
     const { gameId, move } = data;
-    // Process the move, update Redis and MongoDB
+    // Process the move
+    const game = await Game.findById(gameId);
+    // Assuming you have a method to apply the move to the game
+    game.applyMove(move);
+    await game.save();
     io.in(gameId).emit("moveMade", move);
   });
 };
