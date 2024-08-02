@@ -1,7 +1,10 @@
+import { getRandomSoldierCount } from "./utils.js"; // Adjust the path as needed
+
 export class Player {
-  constructor(name, color) {
+  constructor(name, color, _id) {
     this.name = name;
     this.color = color;
+    this._id = _id;
     this.squares = [];
   }
 

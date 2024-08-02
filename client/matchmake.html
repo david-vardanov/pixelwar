@@ -8,9 +8,23 @@
   </head>
   <body>
     <div class="container">
-      <h1>Waiting for another player...</h1>
+      <h1>Matchmaking</h1>
+      <p>Waiting for another player...</p>
     </div>
     <script src="/socket.io/socket.io.js"></script>
-    <script src="js/matchmake.js" type="module"></script>
+    <script>
+      const socket = io();
+
+      socket.emit("joinQueue");
+
+      socket.on("waitingForPlayer", () => {
+        console.log("Waiting for another player...");
+      });
+
+      socket.on("startGame", (data) => {
+        console.log("Starting game with ID:", data.gameId);
+        window.location.href = `game.html?gameId=${data.gameId}&player=${data.player._id}`;
+      });
+    </script>
   </body>
 </html>

@@ -71,6 +71,9 @@ export function updateUI(game) {
   document.getElementById(
     "timer"
   ).innerText = `Time Left: ${game.timer.turnTime}s`;
+  document.getElementById(
+    "current-turn"
+  ).innerText = `Current Turn: ${currentPlayer.name}`;
 
   const boardElement = document.getElementById("game-board");
   boardElement.innerHTML = "";
@@ -79,7 +82,7 @@ export function updateUI(game) {
     squareElement.classList.add("square", square.type);
     if (square.owner) {
       const ownerIndex = game.players.findIndex(
-        (player) => player._id === square.owner
+        (player) => player._id === square.owner._id
       );
       squareElement.classList.add(`player${ownerIndex + 1}`);
       if (ownerIndex !== game.currentPlayerIndex) {

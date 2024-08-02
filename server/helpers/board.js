@@ -1,5 +1,5 @@
 const mongoose = require("mongoose");
-const Square = require("../models/squareModel"); // Use the correct model
+const Square = require("../models/squareModel");
 
 function createInitialBoard() {
   const board = [];

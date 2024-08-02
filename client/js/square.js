@@ -12,9 +12,6 @@ export class Square {
   }
 
   setOwner(player) {
-    if (!player) {
-      throw new Error("Player is undefined in setOwner");
-    }
     this.owner = player;
     this.type = "owned";
     this.soldiers = 11; // Each owned square starts with 11 soldiers

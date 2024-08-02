@@ -10,12 +10,14 @@ import {
 } from "./mechanics.js";
 
 export class Game {
-  constructor(gameState) {
-    this.players = gameState.players.map((p) => new Player(p.name, p.color));
+  constructor(gameState, playerId) {
+    this.players = gameState.players.map(
+      (p) => new Player(p.name, p.color, p._id)
+    );
     this.board = gameState.board.map((s) => {
       const square = new Square(s.x, s.y, s.type);
       if (s.owner) {
-        const owner = this.players.find((p) => p._id === s.owner);
+        const owner = this.players.find((p) => p._id === s.owner.toString());
         if (owner) {
           square.setOwner(owner);
           square.soldiers = s.soldiers;
@@ -28,11 +30,24 @@ export class Game {
     this.currentPlayerIndex = gameState.currentPlayerIndex;
     this.selectedSquare = null;
     this.timer = new Timer(this.updateTimer.bind(this));
+    this.playerId = playerId; // Track the current player
     this.initGame();
   }
 
   initGame() {
+    this.revealInitialSquares();
     this.startTurn();
+  }
+
+  revealInitialSquares() {
+    this.board.forEach((square) => {
+      if (square.owner && square.owner._id === this.playerId) {
+        square.visible = true;
+        this.getAdjacentSquares(square).forEach((adjacentSquare) => {
+          adjacentSquare.visible = true;
+        });
+      }
+    });
   }
 
   startTurn() {
@@ -48,6 +63,7 @@ export class Game {
   }
 
   handleSquareClick(square) {
+    if (this.currentPlayer()._id !== this.playerId) return; // Prevent actions if not player's turn
     handleSquareClick(this, square);
   }
 
@@ -87,5 +103,25 @@ export class Game {
 
   updateUI() {
     updateUI(this);
+  }
+
+  currentPlayer() {
+    return this.players[this.currentPlayerIndex];
+  }
+
+  getAdjacentSquares(square) {
+    const directions = [
+      { x: -1, y: 0 },
+      { x: 1, y: 0 },
+      { x: 0, y: -1 },
+      { x: 0, y: 1 },
+    ];
+    return directions
+      .map((dir) => {
+        return this.board.find(
+          (s) => s.x === square.x + dir.x && s.y === square.y + dir.y
+        );
+      })
+      .filter(Boolean);
   }
 }
