@@ -3,15 +3,14 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>PixelWar</title>
+    <title>PixelWar - Matchmaking</title>
     <link rel="stylesheet" href="css/style.css" />
   </head>
   <body>
     <div class="container">
-      <img src="/images/pixelwar.png" alt="PixelWar Logo" class="logo" />
-      <div class="buttons">
-        <button onclick="location.href='matchmake.html'">Start Game</button>
-      </div>
+      <h1>Waiting for another player...</h1>
     </div>
+    <script src="/socket.io/socket.io.js"></script>
+    <script src="js/matchmake.js" type="module"></script>
   </body>
 </html>

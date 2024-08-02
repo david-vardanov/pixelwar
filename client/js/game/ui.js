@@ -78,7 +78,9 @@ export function updateUI(game) {
     const squareElement = document.createElement("div");
     squareElement.classList.add("square", square.type);
     if (square.owner) {
-      const ownerIndex = game.players.indexOf(square.owner);
+      const ownerIndex = game.players.findIndex(
+        (player) => player._id === square.owner
+      );
       squareElement.classList.add(`player${ownerIndex + 1}`);
       if (ownerIndex !== game.currentPlayerIndex) {
         squareElement.classList.add("inactive");

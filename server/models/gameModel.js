@@ -1,5 +1,5 @@
 const mongoose = require("mongoose");
-const SquareSchema = require("./squareModel").schema; // Import the schema directly
+const { SquareSchema } = require("./squareModel").schema;
 
 const PlayerSchema = new mongoose.Schema({
   name: String,
