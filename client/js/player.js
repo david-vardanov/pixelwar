@@ -1,5 +1,3 @@
-import { getAdjacentSquares } from "./game/board.js";
-
 export class Player {
   constructor(name, color) {
     this.name = name;
@@ -9,18 +7,33 @@ export class Player {
 
   refresh(board) {
     this.squares.forEach((square) => {
-      const adjacentFriendlySquares = getAdjacentSquares(board, square).filter(
-        (adjacentSquare) => adjacentSquare.owner === this
-      ).length;
+      const adjacentFriendlySquares = this.getAdjacentSquares(
+        board,
+        square
+      ).filter((adjacentSquare) => adjacentSquare.owner === this).length;
 
-      // Ensure at least one soldier is generated
       square.soldiers += Math.max(1, adjacentFriendlySquares);
       square.movePoints = 1;
 
-      // Update visibility of adjacent squares
-      getAdjacentSquares(board, square).forEach((adjacentSquare) => {
+      this.getAdjacentSquares(board, square).forEach((adjacentSquare) => {
         adjacentSquare.visible = true;
       });
     });
+  }
+
+  getAdjacentSquares(board, square) {
+    const directions = [
+      { x: -1, y: 0 },
+      { x: 1, y: 0 },
+      { x: 0, y: -1 },
+      { x: 0, y: 1 },
+    ];
+    return directions
+      .map((dir) => {
+        return board.find(
+          (s) => s.x === square.x + dir.x && s.y === square.y + dir.y
+        );
+      })
+      .filter(Boolean);
   }
 }

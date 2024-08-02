@@ -1,6 +1,18 @@
-// js/game/mechanics.js
-
-import { getAdjacentSquares } from "./board.js";
+function getAdjacentSquares(board, square) {
+  const directions = [
+    { x: -1, y: 0 },
+    { x: 1, y: 0 },
+    { x: 0, y: -1 },
+    { x: 0, y: 1 },
+  ];
+  return directions
+    .map((dir) => {
+      return board.find(
+        (s) => s.x === square.x + dir.x && s.y === square.y + dir.y
+      );
+    })
+    .filter(Boolean);
+}
 
 export function handleSquareClick(game, square) {
   const currentPlayer = game.players[game.currentPlayerIndex];

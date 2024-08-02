@@ -2,7 +2,7 @@ import { Game } from "./game/game.js";
 
 document.addEventListener("DOMContentLoaded", () => {
   const socket = io();
-  let gameInstance; // Define gameInstance here
+  let gameInstance;
 
   socket.on("connect", () => {
     console.log("Connected to server");
@@ -10,7 +10,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
   socket.on("gameState", (game) => {
     console.log("Game state:", game);
-    gameInstance = new Game(game); // Initialize gameInstance here
+    gameInstance = new Game(game);
     gameInstance.updateUI();
   });
 
@@ -19,7 +19,6 @@ document.addEventListener("DOMContentLoaded", () => {
     // Update the UI based on the move
   });
 
-  // Create a new game and get the game ID
   fetch("/api/game/start", {
     method: "POST",
   })

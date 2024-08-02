@@ -1,6 +1,5 @@
 import { Square } from "../square.js";
 import { Player } from "../player.js";
-import { createBoard, getAdjacentSquares } from "./board.js";
 import { Timer } from "./timer.js";
 import { updateUI } from "./ui.js";
 import {
@@ -12,48 +11,28 @@ import {
 
 export class Game {
   constructor(gameState) {
-    this.players = gameState
-      ? gameState.players.map((p) => new Player(p.name, p.color))
-      : [new Player("Player 1", "blue"), new Player("Player 2", "red")];
-    this.board = gameState
-      ? gameState.board.map((s) => {
-          const square = new Square(s.x, s.y, s.type);
-          if (s.owner) {
-            const owner = this.players.find((p) => p._id === s.owner);
-            if (owner) {
-              square.setOwner(owner);
-              square.soldiers = s.soldiers;
-              square.movePoints = s.movePoints;
-              square.visible = s.visible;
-            }
-          }
-          return square;
-        })
-      : createBoard();
-    this.currentPlayerIndex = gameState ? gameState.currentPlayerIndex : 0;
+    this.players = gameState.players.map((p) => new Player(p.name, p.color));
+    this.board = gameState.board.map((s) => {
+      const square = new Square(s.x, s.y, s.type);
+      if (s.owner) {
+        const owner = this.players.find((p) => p._id === s.owner);
+        if (owner) {
+          square.setOwner(owner);
+          square.soldiers = s.soldiers;
+          square.movePoints = s.movePoints;
+          square.visible = s.visible;
+        }
+      }
+      return square;
+    });
+    this.currentPlayerIndex = gameState.currentPlayerIndex;
     this.selectedSquare = null;
     this.timer = new Timer(this.updateTimer.bind(this));
     this.initGame();
   }
 
   initGame() {
-    if (!this.gameState) {
-      this.board[0].setOwner(this.players[0]);
-      this.board[19].setOwner(this.players[1]);
-
-      getAdjacentSquares(this.board, this.board[0]).forEach(
-        (adjacentSquare) => {
-          adjacentSquare.visible = true;
-        }
-      );
-      getAdjacentSquares(this.board, this.board[19]).forEach(
-        (adjacentSquare) => {
-          adjacentSquare.visible = true;
-        }
-      );
-
-      this.startTurn();
-    }
+    this.startTurn();
   }
 
   startTurn() {

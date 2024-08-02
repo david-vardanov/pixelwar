@@ -1,4 +1,5 @@
 const Game = require("../models/gameModel");
+const { createInitialBoard } = require("../helpers/board");
 
 exports.startGame = async (req, res) => {
   try {
@@ -19,11 +20,10 @@ exports.startGame = async (req, res) => {
     game.players.push(player1, player2);
 
     game.board[0].owner = player1._id;
-    game.board[19].owner = player2._id;
+    game.board[143].owner = player2._id;
 
-    // Optionally, you can push the squares to player.squares array here if needed
     player1.squares.push(game.board[0]._id);
-    player2.squares.push(game.board[19]._id);
+    player2.squares.push(game.board[143]._id);
 
     await game.save();
 
@@ -33,24 +33,6 @@ exports.startGame = async (req, res) => {
     res.status(500).send(err.message);
   }
 };
-
-function createInitialBoard() {
-  const board = [];
-  for (let y = 0; y < 4; y++) {
-    for (let x = 0; x < 5; x++) {
-      board.push({
-        x,
-        y,
-        type: "neutral",
-        soldiers: 10,
-        movePoints: 0,
-        owner: null,
-        visible: false,
-      });
-    }
-  }
-  return board;
-}
 
 exports.initializeSocket = (io, socket, redisClient) => {
   socket.on("joinGame", async (gameId) => {

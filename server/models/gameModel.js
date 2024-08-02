@@ -1,19 +1,10 @@
 const mongoose = require("mongoose");
+const SquareSchema = require("./squareModel").schema; // Import the schema directly
 
 const PlayerSchema = new mongoose.Schema({
   name: String,
   color: String,
   squares: [{ type: mongoose.Schema.Types.ObjectId, ref: "Square" }],
-});
-
-const SquareSchema = new mongoose.Schema({
-  x: Number,
-  y: Number,
-  type: { type: String, default: "neutral" },
-  soldiers: { type: Number, default: 10 },
-  movePoints: { type: Number, default: 0 },
-  owner: { type: mongoose.Schema.Types.ObjectId, ref: "Player", default: null },
-  visible: { type: Boolean, default: false },
 });
 
 const GameSchema = new mongoose.Schema({
